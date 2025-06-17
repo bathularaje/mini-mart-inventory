@@ -12,3 +12,12 @@ A lightweight web-based inventory tracker built with **Flask**, **SQLite**, **HT
 - ⚡ Responsive UI with no page reloads (AJAX using `fetch`)
 
 ---
+
+## 🛠️ Tech Stack
+
+- **Backend:** Python Flask + SQLAlchemy
+- **Database:** SQLite (auto-generated)
+- **Frontend:** HTML, CSS, JavaScript
+- **API:** REST-style routes (GET, POST, PUT, DELETE)
+
+---
