@@ -12,6 +12,12 @@ class Product(db.Model):
     quantity = db.Column(db.Integer, default=0)
     price = db.Column(db.Float, default=0.0)
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
