@@ -1,63 +1,35 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MiniMart Inventory</title>
+  <title>Login - MiniMart</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <h1>MiniMart Inventory System</h1>
-  <input type="text" id="name" placeholder="Product Name">
-  <input type="number" id="quantity" placeholder="Quantity">
-  <input type="number" id="price" placeholder="Price">
-  <button onclick="addProduct()">Add Product</button>
-
-  <ul id="productList"></ul>
+  <h1>Login</h1>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Username" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button type="submit">Login</button>
+  </form>
+  <p><a href="/register">Register</a> | <a href="/forgot-password">Forgot Password?</a></p>
 
   <script>
-    async function loadProducts() {
-      const res = await fetch('/api/products');
-      const data = await res.json();
-      const list = document.getElementById('productList');
-      list.innerHTML = '';
-      data.forEach(p => {
-        list.innerHTML += `
-          <li>
-            <input value="${p.name}" onchange="updateProduct(${p.id}, this.value, ${p.quantity}, ${p.price})" />
-            Qty: <input type="number" value="${p.quantity}" onchange="updateProduct(${p.id}, '${p.name}', this.value, ${p.price})" />
-            $: <input type="number" value="${p.price}" step="0.01" onchange="updateProduct(${p.id}, '${p.name}', ${p.quantity}, this.value)" />
-            <button onclick="deleteProduct(${p.id})">Delete</button>
-          </li>`;
-      });
-    }
+    document.getElementById('loginForm').onsubmit = async function (e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
 
-    async function addProduct() {
-      const name = document.getElementById('name').value;
-      const quantity = parseInt(document.getElementById('quantity').value);
-      const price = parseFloat(document.getElementById('price').value);
-      await fetch('/api/products', {
+      const res = await fetch('/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ name, quantity, price })
+        body: JSON.stringify({ username, password })
       });
-      loadProducts();
-    }
 
-    async function updateProduct(id, name, quantity, price) {
-      await fetch(`/api/products/${id}`, {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ name, quantity, price })
-      });
-      loadProducts();
-    }
+      const data = await res.json();
+      alert(data.message || data.error);
 
-    async function deleteProduct(id) {
-      await fetch(`/api/products/${id}`, { method: 'DELETE' });
-      loadProducts();
-    }
-
-    loadProducts();
+      if (res.ok) window.location.href = "/";
+    };
   </script>
 </body>
 </html>
