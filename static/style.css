@@ -58,3 +58,51 @@ button {
   transition: background-color 0.2s ease-in-out;
   margin: 5px 0;
 }
+
+
+button:hover {
+  background-color: #218838;
+}
+
+/* Delete buttons */
+button.delete {
+  background-color: #dc3545;
+}
+
+button.delete:hover {
+  background-color: #c82333;
+}
+
+/* Layout list */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+li input {
+  width: auto;
+  margin-right: 10px;
+}
+
+/* Message Styling */
+.success {
+  color: green;
+  margin-top: 10px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
