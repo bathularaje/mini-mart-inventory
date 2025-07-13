@@ -71,6 +71,12 @@ def forgot_password():
     db.session.commit()
     return jsonify({'message': 'Password updated successfully'}), 200
 
+@app.route('/')
+def index():
+    if 'user_id' not in session:
+        return redirect(url_for('login_page'))
+    return render_template('index.html', username=session['username'])
+
 
 @app.route('/')
 def index():
