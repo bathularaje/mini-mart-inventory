@@ -106,3 +106,36 @@ li input {
   color: red;
   margin-top: 10px;
 }
+
+/* Center alignment for auth pages */
+form {
+  text-align: center;
+  margin-top: 20px;
+}
+
+form input, form button {
+  display: block;
+  margin: 10px auto;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+  body {
+    margin: 20px 10px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="number"] {
+    width: 90%;
+  }
+
+  button {
+    width: 90%;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
