@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventory.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'your_super_secret_key'  # Change this in production
+
 db = SQLAlchemy(app)
 
 class Product(db.Model):
