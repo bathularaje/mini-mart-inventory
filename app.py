@@ -20,6 +20,58 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
 
 
+@app.route('/login', methods=['GET'])
+def login_page():
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET'])
+def register_page():
+    return render_template('register.html')
+
+@app.route('/forgot-password', methods=['GET'])
+def forgot_password_page():
+    return render_template('forgot_password.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.')
+    return redirect(url_for('login_page'))
+
+# ---------- Auth API ----------
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    if User.query.filter_by(username=data['username']).first():
+        return jsonify({'error': 'Username already exists'}), 400
+    hashed_pw = generate_password_hash(data['password'])
+    user = User(username=data['username'], password_hash=hashed_pw)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'message': 'User registered successfully'}), 201
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user = User.query.filter_by(username=data['username']).first()
+    if not user or not check_password_hash(user.password_hash, data['password']):
+        return jsonify({'error': 'Invalid username or password'}), 401
+    session['user_id'] = user.id
+    session['username'] = user.username
+    return jsonify({'message': 'Login successful'}), 200
+
+@app.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    user = User.query.filter_by(username=data['username']).first()
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    new_password = data['new_password']
+    user.password_hash = generate_password_hash(new_password)
+    db.session.commit()
+    return jsonify({'message': 'Password updated successfully'}), 200
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
