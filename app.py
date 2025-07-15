@@ -1,13 +1,15 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventory.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'your_super_secret_key' 
+app.secret_key = 'your_super_secret_key'  # Change this in production
 
 db = SQLAlchemy(app)
 
+# ---------- Models ----------
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -19,7 +21,7 @@ class User(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
 
-
+# ---------- Page Routes ----------
 @app.route('/login', methods=['GET'])
 def login_page():
     return render_template('login.html')
@@ -71,12 +73,14 @@ def forgot_password():
     db.session.commit()
     return jsonify({'message': 'Password updated successfully'}), 200
 
+# ---------- Protected Home Page ----------
 @app.route('/')
 def index():
     if 'user_id' not in session:
         return redirect(url_for('login_page'))
     return render_template('index.html', username=session['username'])
 
+# ---------- Product API ----------
 @app.route('/api/products', methods=['GET'])
 def get_products():
     if 'user_id' not in session:
@@ -122,6 +126,7 @@ def delete_product(product_id):
     db.session.commit()
     return jsonify({'message': 'Product deleted'})
 
+# ---------- Run App ----------
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
